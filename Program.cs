@@ -1,4 +1,6 @@
+using Library.Interface;
 using Library.Models;
+using Library.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<LibraryDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
 );
+
+builder.Services.AddSingleton(builder.Configuration);
+builder.Services.AddScoped<ILibraryAsset, LibraryAssetService>();       // LibraryAssetService is going to be injected into CatalogController anytime it is requesting out ILibraryAsset Interface
+builder.Services.AddScoped<ICheckout, CheckoutService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
